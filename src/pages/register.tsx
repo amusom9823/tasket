@@ -13,13 +13,16 @@ export default function RegisterForm() {
       <Box>
         <Formik
           initialValues={{ username: '', email: '', password: '', error: null }}
-          onSubmit={(values, { setErrors }) => {
+          onSubmit={(values, { setErrors, setSubmitting, resetForm }) => {
             console.log(values)
             create.mutate(values, {
               onSuccess: (data) => {
+                setSubmitting(false)
+                resetForm({ values: values })
                 console.log('Register Success:', data)
               },
               onError: (error) => {
+                setSubmitting(false)
                 console.log('Register error:', error)
               },
             })
@@ -89,7 +92,11 @@ export default function RegisterForm() {
                 error={touched.password && Boolean(errors.password)}
                 helperText={touched.password && errors.password}
               />
-              <Button type="submit" variant="contained">
+              <Button
+                type="submit"
+                variant="contained"
+                disabled={!isValid || !dirty || isSubmitting}
+              >
                 Submit
               </Button>
             </Form>
