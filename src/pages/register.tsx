@@ -1,5 +1,6 @@
 import { Box, Button, Container, TextField } from '@mui/material'
 import { Form, Formik } from 'formik'
+import { enqueueSnackbar } from 'notistack'
 import React from 'react'
 import * as Yup from 'yup'
 
@@ -19,11 +20,11 @@ export default function RegisterForm() {
               onSuccess: (data) => {
                 setSubmitting(false)
                 resetForm({ values: values })
-                console.log('Register Success:', data)
+                enqueueSnackbar('Register Success', { variant: 'success' })
               },
               onError: (error) => {
                 setSubmitting(false)
-                console.log('Register error:', error)
+                enqueueSnackbar('Register error:', { variant: 'error' })
               },
             })
           }}
