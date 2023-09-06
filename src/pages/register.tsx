@@ -3,7 +3,11 @@ import { Form, Formik } from 'formik'
 import React from 'react'
 import * as Yup from 'yup'
 
+import { trpc } from '@/utils/trpc'
+
 export default function RegisterForm() {
+  const create = trpc.registerRouter.create.useMutation()
+
   return (
     <Container maxWidth="xs">
       <Box>
@@ -11,6 +15,14 @@ export default function RegisterForm() {
           initialValues={{ username: '', email: '', password: '', error: null }}
           onSubmit={(values, { setErrors }) => {
             console.log(values)
+            create.mutate(values, {
+              onSuccess: (data) => {
+                console.log('Register Success:', data)
+              },
+              onError: (error) => {
+                console.log('Register error:', error)
+              },
+            })
           }}
           validationSchema={Yup.object({
             username: Yup.string().required(),
