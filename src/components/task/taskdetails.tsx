@@ -7,8 +7,11 @@ import {
 } from '@mui/material'
 import type { Task } from '@prisma/client'
 import { Form, Formik } from 'formik'
+import { enqueueSnackbar } from 'notistack'
 import React from 'react'
 import * as Yup from 'yup'
+
+import { trpc } from '@/utils/trpc'
 
 interface Props {
   task: Task
@@ -24,12 +27,26 @@ const taskCreateSchame = Yup.object({
 })
 
 export default function TaskDetails({ task }: Props) {
+  const create = trpc.taskRouter.create.useMutation()
+
   return (
     <Box>
       <Formik
         initialValues={{ ...task, error: null }}
         onSubmit={(values, { setErrors, setSubmitting, resetForm }) => {
           console.log(values)
+
+          create.mutate(values, {
+            onSuccess: () => {
+              enqueueSnackbar('Task Created', { variant: 'success' })
+              setSubmitting(false)
+              resetForm({ values: values })
+            },
+            onError: () => {
+              enqueueSnackbar('Task Create failed', { variant: 'error' })
+              setSubmitting(false)
+            },
+          })
         }}
         validationSchema={taskCreateSchame}
       >
