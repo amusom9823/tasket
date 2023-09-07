@@ -23,7 +23,7 @@ export default function Home() {
             Welcome to Our Site
           </Typography>
           <Box mt={4}>discription</Box>
-          <Button onClick={() => signIn()}>Login</Button>
+          <Button onClick={() => signIn()}>signIn</Button>
         </Box>
         <div>
           <p>{hello.data.greeting}</p>
