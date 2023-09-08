@@ -14,35 +14,33 @@ export default function Home() {
   const tasks = trpc.taskRouter.list.useQuery()
 
   return (
-    <main>
-      <Container maxWidth="md">
-        <Box textAlign="center" py={10}>
-          {session ? (
-            <Grid container spacing={10}>
-              <Grid item xs={6} spacing={2}>
-                <Typography variant="h5" gutterBottom>
-                  Create New Task
-                </Typography>
-                {tasks.data && <TaskList tasks={tasks.data.tasks} />}
-              </Grid>
-              <Grid item xs={6} spacing={2}>
-                <TaskDetails
-                  task={{
-                    id: '',
-                    title: '',
-                    is_finish: true,
-                    description: '',
-                    end_date_scheduled: null,
-                    end_date_actual: null,
-                  }}
-                />
-              </Grid>
+    <Container maxWidth={false}>
+      <Box p={10}>
+        {session ? (
+          <Grid container spacing={10}>
+            <Grid item xs={6}>
+              <Typography variant="h5" gutterBottom>
+                Create New Task
+              </Typography>
+              {tasks.data && <TaskList tasks={tasks.data.tasks} />}
             </Grid>
-          ) : (
-            <Button onClick={() => signIn()}>signIn</Button>
-          )}
-        </Box>
-      </Container>
-    </main>
+            <Grid item xs={6}>
+              <TaskDetails
+                task={{
+                  id: '',
+                  title: '',
+                  is_finish: true,
+                  description: '',
+                  end_date_scheduled: null,
+                  end_date_actual: null,
+                }}
+              />
+            </Grid>
+          </Grid>
+        ) : (
+          <Button onClick={() => signIn()}>signIn</Button>
+        )}
+      </Box>
+    </Container>
   )
 }
