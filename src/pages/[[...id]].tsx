@@ -45,7 +45,12 @@ export default function Home() {
             </Grid>
           </Grid>
         ) : (
-          <Button onClick={() => signIn()}>signIn</Button>
+          <>
+            <Typography variant="h4" gutterBottom>
+              Welcome to Tasket
+            </Typography>
+            <Button onClick={() => signIn()}>Login</Button>
+          </>
         )}
       </Box>
     </Container>
