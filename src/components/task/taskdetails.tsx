@@ -40,7 +40,6 @@ export default function TaskDetails({ task }: Props) {
   const { enqueueSnackbar } = useSnackbar()
 
   const create = trpc.taskRouter.create.useMutation()
-  const update = trpc.taskRouter.update.useMutation()
 
   return (
     <Box>
@@ -60,17 +59,6 @@ export default function TaskDetails({ task }: Props) {
               },
             })
           } else {
-            update.mutate(values, {
-              onSuccess: () => {
-                enqueueSnackbar('Task Updated', { variant: 'success' })
-                setSubmitting(false)
-                resetForm({ values: values })
-              },
-              onError: () => {
-                enqueueSnackbar('Task Update failed', { variant: 'error' })
-                setSubmitting(false)
-              },
-            })
           }
         }}
         validationSchema={taskCreateSchame}
@@ -150,7 +138,7 @@ export default function TaskDetails({ task }: Props) {
                 variant="contained"
                 disabled={!isValid || !dirty || isSubmitting}
               >
-                {task.id === '' ? 'Create' : 'Update'}
+                Create
               </Button>
             </Form>
           </>
