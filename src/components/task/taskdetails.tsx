@@ -7,15 +7,11 @@ import {
 } from '@mui/material'
 import type { Task } from '@prisma/client'
 import { Form, Formik } from 'formik'
-import { useSnackbar } from 'notistack'
+import { enqueueSnackbar } from 'notistack'
 import React from 'react'
 import * as Yup from 'yup'
 
 import { trpc } from '@/utils/trpc'
-
-import { FormikDatePicker } from './FormikDatePicker'
-//https://codesandbox.io/s/reset-mui-datepicker-v6-fyrxxu?file=/demo.tsx
-//https://codesandbox.io/p/sandbox/formik-mui-x-date-picker-for-mui-x-date-picker-v6-forked-n4v5hz?file=/src/components/DatePicker/TimePicker.tsx:1,1
 
 interface Props {
   task: Task
@@ -30,15 +26,7 @@ const taskCreateSchame = Yup.object({
   end_date_actual: Yup.date().nullable(),
 })
 
-//
-
-const taskDelereSchame = Yup.object({
-  id: Yup.string().required(),
-})
-
 export default function TaskDetails({ task }: Props) {
-  const { enqueueSnackbar } = useSnackbar()
-
   const create = trpc.taskRouter.create.useMutation()
 
   return (
@@ -46,20 +34,19 @@ export default function TaskDetails({ task }: Props) {
       <Formik
         initialValues={{ ...task, error: null }}
         onSubmit={(values, { setErrors, setSubmitting, resetForm }) => {
-          if (task.id === '') {
-            const ans = create.mutate(values, {
-              onSuccess: () => {
-                enqueueSnackbar('Task Created', { variant: 'success' })
-                setSubmitting(false)
-                resetForm({ values: values })
-              },
-              onError: () => {
-                enqueueSnackbar('Task Create failed', { variant: 'error' })
-                setSubmitting(false)
-              },
-            })
-          } else {
-          }
+          console.log(values)
+
+          create.mutate(values, {
+            onSuccess: () => {
+              enqueueSnackbar('Task Created', { variant: 'success' })
+              setSubmitting(false)
+              resetForm({ values: values })
+            },
+            onError: () => {
+              enqueueSnackbar('Task Create failed', { variant: 'error' })
+              setSubmitting(false)
+            },
+          })
         }}
         validationSchema={taskCreateSchame}
       >
@@ -108,19 +95,7 @@ export default function TaskDetails({ task }: Props) {
                 error={touched.description && Boolean(errors.description)}
                 helperText={touched.description && errors.description}
               />
-              <br />
-              <FormikDatePicker
-                name="end_date_scheduled"
-                label="End Date Scheduled"
-              />
-              <br />
-              <br />
-              <FormikDatePicker
-                name="end_date_actual"
-                label="End Date Actual"
-              />
-              <br />
-              <br />
+
               <FormControlLabel
                 control={
                   <Checkbox

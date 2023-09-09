@@ -1,4 +1,3 @@
-import type { Task } from '@prisma/client'
 import { z } from 'zod'
 
 import { procedure, router } from '../trpc'

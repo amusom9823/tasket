@@ -8,7 +8,7 @@ import {
   TableRow,
 } from '@mui/material'
 import { type Task } from '@prisma/client'
-import { format } from 'date-fns'
+import dayjs from 'dayjs'
 
 interface Props {
   tasks: Task[]
@@ -40,11 +40,11 @@ const TaskList = ({ tasks }: Props) => {
               </TableCell>
               <TableCell>
                 {task.end_date_scheduled &&
-                  format(task.end_date_scheduled, 'MM/dd/yyyy')}
+                  getMonthDayTimeLocal(task.end_date_scheduled)}
               </TableCell>
               <TableCell>
                 {task.end_date_actual &&
-                  format(task.end_date_actual, 'MM/dd/yyyy')}
+                  getMonthDayTimeLocal(task.end_date_actual)}
               </TableCell>
             </TableRow>
           )
@@ -55,3 +55,7 @@ const TaskList = ({ tasks }: Props) => {
 }
 
 export default TaskList
+
+function getMonthDayTimeLocal(date: Date): string {
+  return dayjs(date).format('MM/DD HH:mm:ss')
+}
