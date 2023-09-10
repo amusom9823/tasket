@@ -30,25 +30,38 @@ const taskCreateSchame = Yup.object({
 
 export default function TaskDetails({ task }: Props) {
   const create = trpc.taskRouter.create.useMutation()
+  const update = trpc.taskRouter.update.useMutation()
 
   return (
     <Box>
       <Formik
         initialValues={{ ...task, error: null }}
         onSubmit={(values, { setErrors, setSubmitting, resetForm }) => {
-          console.log(values)
-
-          create.mutate(values, {
-            onSuccess: () => {
-              enqueueSnackbar('Task Created', { variant: 'success' })
-              setSubmitting(false)
-              resetForm({ values: values })
-            },
-            onError: () => {
-              enqueueSnackbar('Task Create failed', { variant: 'error' })
-              setSubmitting(false)
-            },
-          })
+          if (task.id === '') {
+            const ans = create.mutate(values, {
+              onSuccess: () => {
+                enqueueSnackbar('Task Created', { variant: 'success' })
+                setSubmitting(false)
+                resetForm({ values: values })
+              },
+              onError: () => {
+                enqueueSnackbar('Task Create failed', { variant: 'error' })
+                setSubmitting(false)
+              },
+            })
+          } else {
+            update.mutate(values, {
+              onSuccess: () => {
+                enqueueSnackbar('Task Updated', { variant: 'success' })
+                setSubmitting(false)
+                resetForm({ values: values })
+              },
+              onError: () => {
+                enqueueSnackbar('Task Update failed', { variant: 'error' })
+                setSubmitting(false)
+              },
+            })
+          }
         }}
         validationSchema={taskCreateSchame}
       >
@@ -127,7 +140,7 @@ export default function TaskDetails({ task }: Props) {
                 variant="contained"
                 disabled={!isValid || !dirty || isSubmitting}
               >
-                Create
+                {task.id === '' ? 'Create' : 'Update'}
               </Button>
             </Form>
           </>
