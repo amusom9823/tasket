@@ -28,9 +28,16 @@ const taskCreateSchame = Yup.object({
   end_date_actual: Yup.date().nullable(),
 })
 
+//
+
+const taskDelereSchame = Yup.object({
+  id: Yup.string().required(),
+})
+
 export default function TaskDetails({ task }: Props) {
   const create = trpc.taskRouter.create.useMutation()
   const update = trpc.taskRouter.update.useMutation()
+  const taskdelete = trpc.taskRouter.delete.useMutation()
 
   return (
     <Box>
@@ -146,6 +153,46 @@ export default function TaskDetails({ task }: Props) {
           </>
         )}
       </Formik>
+
+      {task.id !== '' && (
+        <Formik
+          initialValues={{ ...task, error: null }}
+          onSubmit={(values, { setErrors, setSubmitting }) => {
+            taskdelete.mutate(
+              { id: task.id },
+              {
+                onSuccess: () => {
+                  enqueueSnackbar('Task Deleted', { variant: 'success' })
+                  setSubmitting(false)
+                },
+                onError: () => {
+                  enqueueSnackbar('Task Delete failed', { variant: 'error' })
+                  setSubmitting(false)
+                },
+              },
+            )
+          }}
+          validationSchema={taskDelereSchame}
+        >
+          {({ handleSubmit, isSubmitting, errors, isValid, dirty }) => (
+            <Form
+              className="ui form error"
+              onSubmit={handleSubmit}
+              autoComplete="off"
+            >
+              <br />
+              <Button
+                type="submit"
+                variant="contained"
+                color="warning"
+                disabled={!isValid || isSubmitting}
+              >
+                Delete
+              </Button>
+            </Form>
+          )}
+        </Formik>
+      )}
     </Box>
   )
 }
