@@ -13,6 +13,8 @@ import * as Yup from 'yup'
 
 import { trpc } from '@/utils/trpc'
 
+import { FormikDatePicker } from './FormikDatePicker'
+
 interface Props {
   task: Task
 }
@@ -95,7 +97,19 @@ export default function TaskDetails({ task }: Props) {
                 error={touched.description && Boolean(errors.description)}
                 helperText={touched.description && errors.description}
               />
-
+              <br />
+              <FormikDatePicker
+                name="end_date_scheduled"
+                label="End Date Scheduled"
+              />
+              <br />
+              <br />
+              <FormikDatePicker
+                name="end_date_actual"
+                label="End Date Actual"
+              />
+              <br />
+              <br />
               <FormControlLabel
                 control={
                   <Checkbox
